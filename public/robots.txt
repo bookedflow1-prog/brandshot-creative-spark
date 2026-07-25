@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /home
+Disallow: /create
+Disallow: /projects
+Disallow: /editor
+Disallow: /video
+Disallow: /exports
+Disallow: /auth
+
+Sitemap: /sitemap.xml
