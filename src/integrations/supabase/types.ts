@@ -62,6 +62,53 @@ export type Database = {
         }
         Relationships: []
       }
+      editor_scenes: {
+        Row: {
+          canvas: Json
+          created_at: string
+          height: number
+          id: string
+          name: string
+          project_id: string
+          thumbnail_url: string | null
+          updated_at: string
+          user_id: string
+          width: number
+        }
+        Insert: {
+          canvas?: Json
+          created_at?: string
+          height?: number
+          id?: string
+          name?: string
+          project_id: string
+          thumbnail_url?: string | null
+          updated_at?: string
+          user_id: string
+          width?: number
+        }
+        Update: {
+          canvas?: Json
+          created_at?: string
+          height?: number
+          id?: string
+          name?: string
+          project_id?: string
+          thumbnail_url?: string | null
+          updated_at?: string
+          user_id?: string
+          width?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "editor_scenes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -204,6 +251,28 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      refund_credits: {
+        Args: {
+          _amount: number
+          _description: string
+          _metadata?: Json
+          _user_id: string
+        }
+        Returns: number
+      }
+      spend_credits: {
+        Args: {
+          _cost: number
+          _description: string
+          _metadata?: Json
+          _reason: Database["public"]["Enums"]["credit_reason"]
+          _user_id: string
+        }
+        Returns: {
+          new_balance: number
+          tx_id: string
+        }[]
       }
     }
     Enums: {
