@@ -6,7 +6,7 @@ export type AssetRow = {
   id: string;
   project_id: string | null;
   user_id: string;
-  kind: string;
+  kind: "audio" | "design" | "export" | "generated" | "original" | "video";
   storage_path: string;
   mime_type: string | null;
   width: number | null;
@@ -25,8 +25,9 @@ function extOf(file: File) {
   return (file.type.split("/")[1] ?? "bin").toLowerCase();
 }
 
-export function kindForMime(mime: string): "original" | "video" | "generated" {
+export function kindForMime(mime: string): AssetKind {
   if (mime.startsWith("video/")) return "video";
+  if (mime.startsWith("audio/")) return "audio";
   return "original";
 }
 
@@ -49,7 +50,9 @@ async function readImageSize(file: File): Promise<{ width: number | null; height
 }
 
 /** Uploads a file to the private bucket under the owner's folder and records it in the asset library. */
-export async function uploadAsset(file: File, opts: { projectId?: string | null; kind?: string } = {}) {
+export type AssetKind = AssetRow["kind"] & ("audio" | "design" | "export" | "generated" | "original" | "video");
+
+export async function uploadAsset(file: File, opts: { projectId?: string | null; kind?: AssetKind } = {}) {
   const { data: u } = await supabase.auth.getUser();
   const userId = u.user?.id;
   if (!userId) throw new Error("Not signed in");
@@ -66,7 +69,7 @@ export async function uploadAsset(file: File, opts: { projectId?: string | null;
     .insert({
       user_id: userId,
       project_id: opts.projectId ?? null,
-      kind: (opts.kind ?? kindForMime(file.type || "image/png")) as AssetRow["kind"],
+      kind: opts.kind ?? kindForMime(file.type || "image/png"),
       storage_path: path,
       mime_type: file.type || null,
       width,
