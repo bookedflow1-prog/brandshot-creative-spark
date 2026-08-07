@@ -92,7 +92,7 @@ export function readAdjustments(img: fabric.FabricImage): Adjustments {
 }
 
 export function applyAdjustments(img: fabric.FabricImage, a: Adjustments) {
-  const filters: fabric.filters.BaseFilter[] = [];
+  const filters: fabric.filters.BaseFilter<string>[] = [];
   if (a.brightness !== 0) filters.push(new fabric.filters.Brightness({ brightness: a.brightness }));
   if (a.contrast !== 0) filters.push(new fabric.filters.Contrast({ contrast: a.contrast }));
   if (a.saturation !== 0) filters.push(new fabric.filters.Saturation({ saturation: a.saturation }));
