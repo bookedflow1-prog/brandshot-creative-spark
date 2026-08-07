@@ -66,7 +66,7 @@ export function FabricEditor({
   const doSave = useCallback(async () => {
     const fc = fcRef.current;
     if (!fc) return;
-    const json = fc.toJSON(CUSTOM_PROPS as unknown as string[]);
+    const json = fc.toObject(CUSTOM_PROPS as unknown as string[]);
     const vpt = [...fc.viewportTransform] as fabric.TMat2D;
     fc.setViewportTransform([1, 0, 0, 1, 0, 0]);
     const thumb = fc.toDataURL({
@@ -87,7 +87,7 @@ export function FabricEditor({
   const pushHistory = useCallback(() => {
     const fc = fcRef.current;
     if (!fc || historyRef.current.suspend) return;
-    const json = JSON.stringify(fc.toJSON(CUSTOM_PROPS as unknown as string[]));
+    const json = JSON.stringify(fc.toObject(CUSTOM_PROPS as unknown as string[]));
     const h = historyRef.current;
     if (h.stack[h.index] === json) return;
     h.stack = h.stack.slice(0, h.index + 1);
