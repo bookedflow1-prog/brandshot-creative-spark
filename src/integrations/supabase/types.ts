@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_jobs: {
+        Row: {
+          created_at: string
+          credits_spent: number
+          error: string | null
+          id: string
+          input_path: string | null
+          metadata: Json
+          output_asset_id: string | null
+          prompt: string | null
+          status: string
+          tool: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits_spent?: number
+          error?: string | null
+          id?: string
+          input_path?: string | null
+          metadata?: Json
+          output_asset_id?: string | null
+          prompt?: string | null
+          status?: string
+          tool: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits_spent?: number
+          error?: string | null
+          id?: string
+          input_path?: string | null
+          metadata?: Json
+          output_asset_id?: string | null
+          prompt?: string | null
+          status?: string
+          tool?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_jobs_output_asset_id_fkey"
+            columns: ["output_asset_id"]
+            isOneToOne: false
+            referencedRelation: "project_assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_settings: {
         Row: {
           key: string
@@ -142,36 +195,51 @@ export type Database = {
       project_assets: {
         Row: {
           created_at: string
+          duration_seconds: number | null
+          favorite: boolean
           height: number | null
           id: string
           kind: Database["public"]["Enums"]["asset_kind"]
           metadata: Json
           mime_type: string | null
-          project_id: string
+          name: string | null
+          project_id: string | null
+          size_bytes: number | null
+          source: string
           storage_path: string
           user_id: string
           width: number | null
         }
         Insert: {
           created_at?: string
+          duration_seconds?: number | null
+          favorite?: boolean
           height?: number | null
           id?: string
           kind: Database["public"]["Enums"]["asset_kind"]
           metadata?: Json
           mime_type?: string | null
-          project_id: string
+          name?: string | null
+          project_id?: string | null
+          size_bytes?: number | null
+          source?: string
           storage_path: string
           user_id: string
           width?: number | null
         }
         Update: {
           created_at?: string
+          duration_seconds?: number | null
+          favorite?: boolean
           height?: number | null
           id?: string
           kind?: Database["public"]["Enums"]["asset_kind"]
           metadata?: Json
           mime_type?: string | null
-          project_id?: string
+          name?: string | null
+          project_id?: string | null
+          size_bytes?: number | null
+          source?: string
           storage_path?: string
           user_id?: string
           width?: number | null
@@ -240,6 +308,48 @@ export type Database = {
         }
         Relationships: []
       }
+      video_projects: {
+        Row: {
+          created_at: string
+          duration_seconds: number
+          fps: number
+          height: number
+          id: string
+          thumbnail_url: string | null
+          timeline: Json
+          title: string
+          updated_at: string
+          user_id: string
+          width: number
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number
+          fps?: number
+          height?: number
+          id?: string
+          thumbnail_url?: string | null
+          timeline?: Json
+          title?: string
+          updated_at?: string
+          user_id: string
+          width?: number
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number
+          fps?: number
+          height?: number
+          id?: string
+          thumbnail_url?: string | null
+          timeline?: Json
+          title?: string
+          updated_at?: string
+          user_id?: string
+          width?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -277,7 +387,13 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
-      asset_kind: "original" | "generated" | "design" | "export" | "video"
+      asset_kind:
+        | "original"
+        | "generated"
+        | "design"
+        | "export"
+        | "video"
+        | "audio"
       credit_reason:
         | "signup_grant"
         | "admin_grant"
@@ -422,7 +538,14 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
-      asset_kind: ["original", "generated", "design", "export", "video"],
+      asset_kind: [
+        "original",
+        "generated",
+        "design",
+        "export",
+        "video",
+        "audio",
+      ],
       credit_reason: [
         "signup_grant",
         "admin_grant",
